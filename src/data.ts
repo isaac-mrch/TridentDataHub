@@ -64,9 +64,8 @@ export const allTags = Array.from(
 
 function assignTags(d: Omit<Dataset, "tags">): string[] {
   const tags: string[] = [];
-  if (d.disease) tags.push("Disease");
-  if (d.drug) tags.push("Drug Study");
-  if (d.datasetDescription.toLowerCase().includes("mouse")) tags.push("mouse model");
+  if (d.datasetDescription.toLowerCase().includes("mouse")) tags.push("Mouse model");
+  if (d.datasetDescription.toLowerCase().includes("synuclein")) tags.push("Synucleinopathies");
   if (d.datasetType === "Genomics") tags.push("Genomics");
   if (d.datasetType === "Imaging") tags.push("Imaging");
   if (d.datasetType === "Clinical") tags.push("Clinical");
