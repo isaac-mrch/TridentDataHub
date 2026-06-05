@@ -105,7 +105,7 @@ function App() {
         if (filters.institution && d.institution !== filters.institution) return false;
         if (filters.disease && d.disease !== filters.disease) return false;
         if (filters.drug && d.drug !== filters.drug) return false;
-        if (activeTags.size > 0 && !d.tags.every((t) => activeTags.has(t))) return false;
+        if (activeTags.size > 0 && (d.tags.length === 0 || ![...activeTags].every(t => d.tags.includes(t)))) return false;
         return true;
       }),
     [filters, activeTags],
