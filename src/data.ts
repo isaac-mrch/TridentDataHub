@@ -24,7 +24,9 @@ function parseTSV(tsvContent: string): Dataset[] {
       disease: values[6],
       drug: values[7],
       url: values[8],
+      tags: [],
     };
+    dataset.tags = assignTags(dataset);
     datasets.push(dataset);
   }
 
@@ -55,3 +57,19 @@ export const diseases = Array.from(
 export const drugs = Array.from(
   new Set(datasets.map((d) => d.drug).filter(Boolean)),
 ).sort();
+
+export const allTags = Array.from(
+  new Set(datasets.flatMap((d) => d.tags))
+).sort();
+
+function assignTags(d: Omit<Dataset, "tags">): string[] {
+  const tags: string[] = [];
+  if (d.disease) tags.push("Disease");
+  if (d.drug) tags.push("Drug Study");
+  if (d.datasetDescription.toLowerCase().includes("mouse")) tags.push("mouse model");
+  if (d.datasetType === "Genomics") tags.push("Genomics");
+  if (d.datasetType === "Imaging") tags.push("Imaging");
+  if (d.datasetType === "Clinical") tags.push("Clinical");
+  // Add more rules as needed
+  return tags;
+}

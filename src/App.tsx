@@ -6,9 +6,11 @@ import {
   flexRender,
   createColumnHelper,
 } from "@tanstack/react-table";
-import { datasets, datasetTypes, institutions, diseases, drugs } from "./data";
+import { datasets, datasetTypes, institutions, diseases, drugs, allTags } from "./data";
+import type { SortingState } from "@tanstack/react-table";
 import type { Dataset, FilterState } from "./types";
 import "./styles.css";
+
 
 const FILTERS = [
   { key: "datasetType", label: "Dataset Type", options: datasetTypes },
@@ -87,19 +89,26 @@ const columns = [
 function App() {
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
+  const toggleTag = (tag: string) => {
+    setActiveTags(prev => {
+     const next = new Set(prev);
+      next.has(tag) ? next.delete(tag) : next.add(tag);
+      return next;
+    });
+  };
 
   const filteredDatasets = useMemo(
     () =>
       datasets.filter((d) => {
-        if (filters.datasetType && d.datasetType !== filters.datasetType)
-          return false;
-        if (filters.institution && d.institution !== filters.institution)
-          return false;
+        if (filters.datasetType && d.datasetType !== filters.datasetType) return false;
+        if (filters.institution && d.institution !== filters.institution) return false;
         if (filters.disease && d.disease !== filters.disease) return false;
         if (filters.drug && d.drug !== filters.drug) return false;
+        if (activeTags.size > 0 && !d.tags.some(t => activeTags.has(t))) return false;
         return true;
       }),
-    [filters],
+    [filters, activeTags],
   );
 
   // Per-option counts: count rows matching every OTHER active filter,
@@ -212,6 +221,31 @@ function App() {
           )}
         </section>
 
+         {allTags.length > 0 && (
+          <div className="tag-bar" aria-label="Filter by tag">
+            <span className="tag-bar-label">Tags</span>
+            {allTags.map(tag => (
+              <button
+                key={tag}
+                type="button"
+                className={`tag-pill ${activeTags.has(tag) ? "tag-pill--active" : ""}`}
+                onClick={() => toggleTag(tag)}
+                aria-pressed={activeTags.has(tag)}
+              >
+                {tag}
+              </button>
+            ))}
+            {activeTags.size > 0 && (
+              <button
+                type="button"
+                className="clear-all"
+                onClick={() => setActiveTags(new Set())}
+              >
+                Clear tags
+              </button>
+            )}
+          </div>
+        )}  
         <p className="count" role="status" aria-live="polite">
           Showing {filteredDatasets.length} of {datasets.length}
         </p>
@@ -334,3 +368,5 @@ function FilterField({
 }
 
 export default App;
+
+
