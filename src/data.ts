@@ -8,7 +8,7 @@ function parseTSV(tsvContent: string): Dataset[] {
 
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split("\t").map((v) => v.trim());
-    if (values.length !== 9) {
+    if (values.length !== 10) {
       console.warn(
         `Skipping malformed TSV row at Line ${i + 1}: expected 9 columns, got ${values.length}`,
       );
@@ -24,9 +24,8 @@ function parseTSV(tsvContent: string): Dataset[] {
       disease: values[6],
       drug: values[7],
       url: values[8],
-      tags: [],
+      tags: values[9] ? values[9].split(",").map(t => t.trim()) : [],
     };
-    dataset.tags = assignTags(dataset);
     datasets.push(dataset);
   }
 
@@ -61,11 +60,3 @@ export const drugs = Array.from(
 export const allTags = Array.from(
   new Set(datasets.flatMap((d) => d.tags))
 ).sort();
-
-function assignTags(d: Omit<Dataset, "tags">): string[] {
-  const tags: string[] = [];
-  if (d.datasetDescription.toLowerCase().includes("mouse")) tags.push("Mouse model");
-  if (d.datasetDescription.toLowerCase().includes("synuclein")) tags.push("Synucleinopathies");
-  // This is where to add tags
-  return tags;
-}
