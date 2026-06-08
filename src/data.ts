@@ -66,9 +66,6 @@ function assignTags(d: Omit<Dataset, "tags">): string[] {
   const tags: string[] = [];
   if (d.datasetDescription.toLowerCase().includes("mouse")) tags.push("Mouse model");
   if (d.datasetDescription.toLowerCase().includes("synuclein")) tags.push("Synucleinopathies");
-  if (d.datasetType === "Genomics") tags.push("Genomics");
-  if (d.datasetType === "Imaging") tags.push("Imaging");
-  if (d.datasetType === "Clinical") tags.push("Clinical");
-  // Add more rules as needed
+  // This is where to add tags
   return tags;
 }
