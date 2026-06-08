@@ -24,7 +24,10 @@ function parseTSV(tsvContent: string): Dataset[] {
       disease: values[6],
       drug: values[7],
       url: values[8],
-      tags: values[9] ? values[9].split(",").map(t => t.trim()) : [],
+      tags: [
+        ...(values[9] ? values[9].split(",").map((t) => t.trim()).filter(Boolean) : []),
+        values[2].trim(),
+      ],
     };
     datasets.push(dataset);
   }
