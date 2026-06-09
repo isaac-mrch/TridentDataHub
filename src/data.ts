@@ -8,9 +8,9 @@ function parseTSV(tsvContent: string): Dataset[] {
 
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split("\t").map((v) => v.trim());
-    if (values.length !== 10) {
+    if (values.length < 9) {
       console.warn(
-        `Skipping malformed TSV row at Line ${i + 1}: expected 9 columns, got ${values.length}`,
+      `Skipping malformed TSV row at Line ${i + 1}: expected 9 columns, got ${values.length}`,
       );
       continue;
     }
