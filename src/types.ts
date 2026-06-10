@@ -8,11 +8,6 @@ export interface Dataset {
   disease: string;
   drug: string;
   url: string;
+  tags: string[];
 }
 
-export interface FilterState {
-  datasetType: string | null;
-  institution: string | null;
-  disease: string | null;
-  drug: string | null;
-}
