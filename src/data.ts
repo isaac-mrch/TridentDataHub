@@ -8,9 +8,9 @@ function parseTSV(tsvContent: string): Dataset[] {
 
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split("\t").map((v) => v.trim());
-    if (values.length < 9) {
+    if (values.length !== 10) {
       console.warn(
-      `Skipping malformed TSV row at Line ${i + 1}: expected 9 columns, got ${values.length}`,
+        `Skipping malformed TSV row at Line ${i + 1}: expected 9 columns, got ${values.length}`,
       );
       continue;
     }
@@ -26,7 +26,6 @@ function parseTSV(tsvContent: string): Dataset[] {
       url: values[8],
       tags: [
         ...(values[9] ? values[9].split(",").map((t) => t.trim()).filter(Boolean) : []),
-        values[2].trim(),
       ],
     };
     datasets.push(dataset);
@@ -62,4 +61,7 @@ export const drugs = Array.from(
 
 export const allTags = Array.from(
   new Set(datasets.flatMap((d) => d.tags))
+).sort();
+export const allInstitutions = Array.from(
+  new Set(datasets.map((d) => d.institution).filter(Boolean))
 ).sort();

@@ -7,7 +7,7 @@ import {
   createColumnHelper,
   type SortingState,
 } from "@tanstack/react-table";
-import { datasets, allTags } from "./data";
+import { datasets, allTags, allInstitutions } from "./data";
 import type { Dataset } from "./types";
 import "./styles.css";
 
@@ -61,11 +61,13 @@ const columns = [
 ];
 
 function App() {
-  const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
+  const [activeInstitutions, setActiveInstitutions] = useState<Set<string>>(new Set());
+  const [activeCustomTags, setActiveCustomTags] = useState<Set<string>>(new Set());
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const toggleTag = (tag: string) => {
-    setActiveTags(prev => {
+  const toggleTag = (tag: string, isInstitution: boolean) => {
+    const setter = isInstitution ? setActiveInstitutions : setActiveCustomTags;
+    setter(prev => {
       const next = new Set(prev);
       next.has(tag) ? next.delete(tag) : next.add(tag);
       return next;
@@ -75,12 +77,14 @@ function App() {
   const filteredDatasets = useMemo(
     () =>
       datasets.filter((d) => {
-        if (activeTags.size === 0) return true;
-        const datasetTags = [...d.tags, d.institution].filter(Boolean);
-        return [...activeTags].every(t => datasetTags.includes(t));
+        if (activeInstitutions.size > 0 && !activeInstitutions.has(d.institution)) return false;
+        if (activeCustomTags.size > 0 && ![...activeCustomTags].every(t => d.tags.includes(t))) return false;
+        return true;
       }),
-    [activeTags],
+    [activeInstitutions, activeCustomTags],
   );
+
+
 
   const table = useReactTable({
     data: filteredDatasets,
@@ -105,33 +109,46 @@ function App() {
       </header>
 
       <main className="wrap main">
-        {/* Tag filter bar */}
-        <section aria-labelledby="tags-heading">
-          <h2 id="tags-heading" className="sr-only">Tags</h2>
-          <div className="tag-bar">
-            <span className="tag-bar-label">Filter by tag</span>
-            {allTags.map(tag => (
-              <button
-                key={tag}
-                type="button"
-                className={`tag-pill ${activeTags.has(tag) ? "tag-pill--active" : ""}`}
-                onClick={() => toggleTag(tag)}
-                aria-pressed={activeTags.has(tag)}
-              >
-                {tag}
-              </button>
-            ))}
-            {activeTags.size > 0 && (
-              <button
-                type="button"
-                className="clear-all"
-                onClick={() => setActiveTags(new Set())}
-              >
-                Clear all
-              </button>
-            )}
-          </div>
-        </section>
+        <div className="tag-bar">
+          <span className="tag-bar-label">Institution</span>
+          {allInstitutions.map(tag => (
+            <button
+              key={tag}
+              type="button"
+              className={`tag-pill ${activeInstitutions.has(tag) ? "tag-pill--active" : ""}`}
+              onClick={() => toggleTag(tag, true)}
+            >
+              {tag}
+            </button>
+          ))}
+          {activeInstitutions.size > 0 && (
+            <button type="button" className="clear-all"
+              onClick={() => setActiveInstitutions(new Set())}>
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Custom tag pills — AND */}
+        <div className="tag-bar">
+          <span className="tag-bar-label">Tags</span>
+          {allTags.map(tag => (
+            <button
+              key={tag}
+              type="button"
+              className={`tag-pill ${activeCustomTags.has(tag) ? "tag-pill--active" : ""}`}
+              onClick={() => toggleTag(tag, false)}
+            >
+              {tag}
+            </button>
+          ))}
+          {activeCustomTags.size > 0 && (
+            <button type="button" className="clear-all"
+              onClick={() => setActiveCustomTags(new Set())}>
+              Clear
+            </button>
+          )}
+        </div>
 
         <p className="count" role="status" aria-live="polite">
           Showing {filteredDatasets.length} of {datasets.length}
@@ -181,7 +198,7 @@ function App() {
             <div className="empty">
               <p className="empty-msg">No datasets match these tags.</p>
               <button type="button" className="clear-all"
-                onClick={() => setActiveTags(new Set())}>
+                onClick={() => { setActiveInstitutions(new Set()); setActiveCustomTags(new Set()); }} >
                 Clear tags
               </button>
             </div>
