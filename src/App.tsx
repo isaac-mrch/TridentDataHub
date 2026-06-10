@@ -155,7 +155,7 @@ function App() {
         </p>
 
         {/* Table */}
-        <section aria-labelledby="table-heading">
+        <section aria-labelledby="table-heading" className="table-section" style={{ minHeight: "70vh" }}>
           <h2 id="table-heading" className="sr-only">Datasets</h2>
           {filteredDatasets.length > 0 ? (
             <div className="table-wrap">

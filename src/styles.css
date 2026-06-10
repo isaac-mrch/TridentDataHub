@@ -91,6 +91,10 @@ a {
   min-width: 0;
 }
 
+.table-section {
+  min-height: 70vh;
+}
+
 /* Clear all button */
 .clear-all {
   background: none;
@@ -124,6 +128,7 @@ a {
   border-radius: 4px;
   overflow: auto;
   max-height: 70vh;
+  min-height: 70vh; 
   background: var(--surface);
 }
 
@@ -264,6 +269,8 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 70vh; 
+  justify-content: center; 
   gap: 12px;
 }
 
