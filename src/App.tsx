@@ -1,15 +1,16 @@
 import { useState, useMemo } from "react";
 import {
+  type SortingState,
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   flexRender,
   createColumnHelper,
-  type SortingState,
 } from "@tanstack/react-table";
 import { datasets, allTags, allInstitutions } from "./data";
 import type { Dataset } from "./types";
 import "./styles.css";
+
 
 const columnHelper = createColumnHelper<Dataset>();
 
@@ -63,7 +64,7 @@ const columns = [
 function App() {
   const [activeInstitutions, setActiveInstitutions] = useState<Set<string>>(new Set());
   const [activeCustomTags, setActiveCustomTags] = useState<Set<string>>(new Set());
-  const [sorting, setSorting] = useState([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const toggleTag = (tag: string, isInstitution: boolean) => {
     const setter = isInstitution ? setActiveInstitutions : setActiveCustomTags;
