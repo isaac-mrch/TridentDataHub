@@ -63,7 +63,7 @@ const columns = [
 function App() {
   const [activeInstitutions, setActiveInstitutions] = useState<Set<string>>(new Set());
   const [activeCustomTags, setActiveCustomTags] = useState<Set<string>>(new Set());
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState([]);
 
   const toggleTag = (tag: string, isInstitution: boolean) => {
     const setter = isInstitution ? setActiveInstitutions : setActiveCustomTags;

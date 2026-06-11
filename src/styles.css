@@ -52,6 +52,7 @@ a {
 
 .wrap {
   max-width: 100%;
+  width: 100%;
   margin: 0 auto;
   padding: 0 32px;
 }
@@ -91,11 +92,7 @@ a {
   min-width: 0;
 }
 
-.table-section {
-  min-height: 70vh;
-}
 
-/* Clear all button */
 .clear-all {
   background: none;
   border: 0;
@@ -123,18 +120,22 @@ a {
 .table-wrap {
   width: 100%;
   max-width: 100%;
-  min-width: 0;
+  min-width: 100%;
   border: 1px solid var(--rule);
   border-radius: 4px;
   overflow: auto;
   max-height: 70vh;
-  min-height: 70vh; 
   background: var(--surface);
+}
+
+.table-section {
+  height: 70vh;
+  min-height: 70vh;
 }
 
 .table {
   width: 100%;
-  min-width: 100%;
+  min-width: 100%; 
   border-collapse: collapse;
   font-size: 13px;
 }
@@ -269,8 +270,6 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 70vh; 
-  justify-content: center; 
   gap: 12px;
 }
 
@@ -294,7 +293,7 @@ a {
 }
 
 .tag-bar-label {
-  font-size: 19px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-muted);
   margin-right: 4px;
@@ -306,7 +305,7 @@ a {
   border: 1px solid var(--rule-strong);
   background: var(--surface);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
