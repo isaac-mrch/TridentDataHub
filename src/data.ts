@@ -45,20 +45,6 @@ if (import.meta.env.DEV) {
   console.debug("Datasets parsed:", datasets.length);
 }
 
-// Extract unique values for filters
-export const datasetTypes = Array.from(
-  new Set(datasets.map((d) => d.datasetType)),
-).sort();
-export const institutions = Array.from(
-  new Set(datasets.map((d) => d.institution)),
-).sort();
-export const diseases = Array.from(
-  new Set(datasets.map((d) => d.disease).filter(Boolean)),
-).sort();
-export const drugs = Array.from(
-  new Set(datasets.map((d) => d.drug).filter(Boolean)),
-).sort();
-
 export const allTags = Array.from(
   new Set(datasets.flatMap((d) => d.tags))
 ).sort();
